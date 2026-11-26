@@ -1,0 +1,43 @@
+@import '@fontsource-variable/playfair-display/wght.css';
+@import '@fontsource-variable/playfair-display/wght-italic.css';
+@import '@fontsource-variable/dm-sans/wght.css';
+@import '@fontsource/pinyon-script/400.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --accent: #D4A64D; }
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { @apply bg-ivory font-sans text-ink antialiased; overflow-x: hidden; }
+  h1, h2, h3 { @apply font-display text-emerald; }
+  :focus-visible { outline: 2px solid #8A6420; outline-offset: 2px; }
+  .on-dark :focus-visible { outline-color: #F4CE83; }
+  input, select, textarea { font-size: 16px; } /* avoids iOS zoom */
+  @media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+}
+
+@layer components {
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded px-5 py-2.5 text-[15px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-gold { @apply btn bg-gradient-to-b from-gold-light to-gold text-emerald-dark hover:from-gold hover:to-gold border border-gold-deep/30; }
+  .btn-emerald { @apply btn bg-emerald text-white hover:bg-emerald-mid; }
+  .btn-outline { @apply btn border border-emerald/40 bg-white text-emerald hover:bg-emerald-soft; }
+  .btn-ghost { @apply btn text-emerald hover:bg-emerald-soft; }
+  .btn-danger { @apply btn bg-danger text-white hover:bg-red-800; }
+  .btn-sm { @apply min-h-[36px] px-3 py-1.5 text-sm; }
+  .input { @apply min-h-[44px] w-full rounded border border-emerald/25 bg-white px-3 py-2 text-ink placeholder:text-muted/70 focus:border-emerald focus:outline-none focus:ring-2 focus:ring-gold/60 disabled:bg-champagne/50; }
+  .label { @apply mb-1 block text-sm font-medium text-ink; }
+  .hint { @apply mt-1 text-sm text-muted; }
+  .err { @apply mt-1 text-sm font-medium text-danger; }
+  .card { @apply rounded-lg border border-gold-line/80 bg-white; }
+  .container-page { @apply mx-auto w-full max-w-page px-4 sm:px-6; }
+  .gold-rule { @apply h-px flex-1 bg-gradient-to-r from-transparent via-gold to-transparent; }
+  .eyebrow { @apply text-[13px] font-medium uppercase tracking-[0.28em]; }
+  .badge { @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold; }
+}
+
+@media print {
+  header, footer, .no-print { display: none !important; }
+  body { background: #fff; }
+}

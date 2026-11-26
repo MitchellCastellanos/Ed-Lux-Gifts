@@ -1,0 +1,458 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ───────────────────────── Admin authentication (Better Auth) ─────────────────────────
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ───────────────────────── Settings ─────────────────────────
+
+/// Key/value JSON settings. Validated with Zod in src/lib/settings.ts.
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model Counter {
+  key   String @id
+  value Int
+}
+
+// ───────────────────────── Catalog ─────────────────────────
+
+enum ComponentKind {
+  ITEM // product that can go in a basket (chocolates, candles…)
+  BASE // basket / box the items go into
+  PRESENTATION // wrapping, ribbon, card… (may be free or paid)
+}
+
+model Category {
+  id         String      @id @default(uuid())
+  slug       String      @unique
+  nameFr     String
+  nameEn     String
+  sortOrder  Int         @default(0)
+  active     Boolean     @default(true)
+  isDemo     Boolean     @default(false)
+  components Component[]
+}
+
+/// One inventory-tracked thing. Ready-made recipes and custom baskets both consume these rows.
+model Component {
+  id                 String             @id @default(uuid())
+  kind               ComponentKind      @default(ITEM)
+  categoryId         String?
+  category           Category?          @relation(fields: [categoryId], references: [id])
+  nameFr             String
+  nameEn             String
+  descFr             String             @default("")
+  descEn             String             @default("")
+  imageUrl           String?
+  priceCents         Int                @default(0) // retail price (items), base price (bases), extra price (presentation)
+  stockOnHand        Int                @default(0)
+  stockReserved      Int                @default(0)
+  lowStockThreshold  Int                @default(3)
+  capacityCost       Int                @default(1) // ITEM: points used in a basket
+  capacity           Int                @default(0) // BASE: max points
+  includedOptionIds  String[]           @default([]) // BASE: presentation options included in the base price
+  customEligible     Boolean            @default(true)
+  active             Boolean            @default(true)
+  archived           Boolean            @default(false)
+  sortOrder          Int                @default(0)
+  isDemo             Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  recipeLines        ProductComponent[]
+  adjustments        StockAdjustment[]
+  stockLines         OrderStockLine[]
+
+  @@index([kind, active])
+}
+
+model StockAdjustment {
+  id          String    @id @default(uuid())
+  componentId String
+  component   Component @relation(fields: [componentId], references: [id])
+  delta       Int
+  newOnHand   Int
+  reason      String    @default("")
+  actor       String    @default("")
+  createdAt   DateTime  @default(now())
+
+  @@index([componentId, createdAt])
+}
+
+model Product {
+  id          String              @id @default(uuid())
+  slug        String              @unique
+  nameFr      String
+  nameEn      String
+  descFr      String              @default("")
+  descEn      String              @default("")
+  priceCents  Int
+  featured    Boolean             @default(false)
+  active      Boolean             @default(true)
+  archived    Boolean             @default(false)
+  sortOrder   Int                 @default(0)
+  isDemo      Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  images      ProductImage[]
+  recipe      ProductComponent[]
+  collections ProductCollection[]
+  orderItems  OrderItem[]
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  altFr     String  @default("")
+  altEn     String  @default("")
+  sortOrder Int     @default(0)
+}
+
+model ProductComponent {
+  productId   String
+  componentId String
+  quantity    Int
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  component   Component @relation(fields: [componentId], references: [id])
+
+  @@id([productId, componentId])
+}
+
+model Collection {
+  id        String              @id @default(uuid())
+  slug      String              @unique
+  nameFr    String
+  nameEn    String
+  descFr    String              @default("")
+  descEn    String              @default("")
+  imageUrl  String?
+  active    Boolean             @default(true)
+  archived  Boolean             @default(false)
+  sortOrder Int                 @default(0)
+  isDemo    Boolean             @default(false)
+  products  ProductCollection[]
+  campaigns Campaign[]
+}
+
+model ProductCollection {
+  productId    String
+  collectionId String
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([productId, collectionId])
+}
+
+model Campaign {
+  id            String      @id @default(uuid())
+  name          String
+  eyebrowFr     String      @default("")
+  eyebrowEn     String      @default("")
+  headlineFr    String
+  headlineEn    String
+  descFr        String      @default("")
+  descEn        String      @default("")
+  ctaFr         String      @default("")
+  ctaEn         String      @default("")
+  taglineFr     String      @default("")
+  taglineEn     String      @default("")
+  desktopImage  String?
+  mobileImage   String?
+  collectionId  String?
+  collection    Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  accent        String      @default("gold")
+  published     Boolean     @default(false)
+  startsAt      DateTime?
+  endsAt        DateTime?
+  sortOrder     Int         @default(0)
+  isDemo        Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+// ───────────────────────── Delivery ─────────────────────────
+
+model DeliveryZone {
+  id                 String               @id @default(uuid())
+  name               String
+  areas              String               @default("") // human-readable list of neighbourhoods
+  feeCents           Int
+  freeThresholdCents Int?
+  active             Boolean              @default(true)
+  sortOrder          Int                  @default(0)
+  verified           Boolean              @default(false) // false = illustrative seed coverage
+  prefixes           DeliveryZonePrefix[]
+  orders             Order[]
+}
+
+model DeliveryZonePrefix {
+  prefix String       @id // 3-character FSA e.g. H9R
+  zoneId String
+  zone   DeliveryZone @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+}
+
+// ───────────────────────── Customers ─────────────────────────
+
+/// Operational customer record grouped by normalized phone. NOT an account and NOT proof of identity.
+model Customer {
+  id              String    @id @default(uuid())
+  phoneE164       String
+  phoneDisplay    String
+  name            String
+  email           String?
+  emailVerifiedAt DateTime?
+  locale          String    @default("fr")
+  notes           String    @default("")
+  isDemo          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  lastActivityAt  DateTime  @default(now())
+  orders          Order[]
+
+  @@unique([phoneE164, isDemo])
+  @@index([name])
+  @@index([email])
+}
+
+// ───────────────────────── Orders ─────────────────────────
+
+enum PaymentMethod {
+  INTERAC
+  COD_CASH
+  COD_INTERAC
+}
+
+enum PaymentStatus {
+  AWAITING_INTERAC
+  DUE_ON_DELIVERY
+  PAID
+  EXPIRED
+  REFUNDED
+}
+
+enum FulfillmentStatus {
+  NEW
+  CONFIRMED
+  PREPARING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum InventoryState {
+  RESERVED
+  CONSUMED
+  RELEASED
+}
+
+model Order {
+  id                  String            @id @default(uuid())
+  number              String            @unique
+  publicToken         String            @unique
+  idempotencyKey      String            @unique
+  isDemo              Boolean           @default(false)
+  customerId          String
+  customer            Customer          @relation(fields: [customerId], references: [id])
+  contactMismatch     Boolean           @default(false)
+  locale              String            @default("fr")
+
+  // Purchaser contact snapshot (never changes when the customer record is edited)
+  purchaserName       String
+  purchaserPhoneE164  String
+  purchaserPhone      String
+  purchaserEmail      String
+
+  // Recipient / delivery snapshot
+  recipientName       String
+  recipientPhone      String?
+  address             String
+  unit                String?
+  city                String
+  postalCode          String
+  zoneId              String?
+  zone                DeliveryZone?     @relation(fields: [zoneId], references: [id], onDelete: SetNull)
+  zoneName            String
+  deliveryDate        String // YYYY-MM-DD, America/Toronto business date
+  instructions        String            @default("")
+
+  // Money (integer cents; fee is frozen at order time)
+  subtotalCents       Int
+  deliveryFeeCents    Int
+  taxCents            Int
+  totalCents          Int
+  taxLines            Json              @default("[]")
+
+  paymentMethod       PaymentMethod
+  paymentStatus       PaymentStatus
+  fulfillmentStatus   FulfillmentStatus @default(NEW)
+  inventoryState      InventoryState    @default(RESERVED)
+  reservationExpiresAt DateTime?
+  cancelReason        String?
+  internalNotes       String            @default("")
+  termsAcceptedAt     DateTime
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  paidAt              DateTime?
+  deliveredAt         DateTime?
+
+  items               OrderItem[]
+  stockLines          OrderStockLine[]
+  events              OrderEvent[]
+
+  @@index([customerId])
+  @@index([purchaserPhoneE164])
+  @@index([purchaserEmail])
+  @@index([deliveryDate])
+  @@index([createdAt])
+  @@index([paymentStatus, reservationExpiresAt])
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  kind        String // READY | CUSTOM
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  nameFr      String
+  nameEn      String
+  imageUrl    String?
+  quantity    Int
+  unitCents   Int
+  giftMessage String   @default("")
+  /// Snapshot of what is inside one basket: [{nameFr,nameEn,quantity,paid?,priceCents}]
+  contents    Json     @default("[]")
+}
+
+/// Exact component units reserved for an order. Used to consume / restore without double counting.
+model OrderStockLine {
+  orderId     String
+  componentId String
+  quantity    Int
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  component   Component @relation(fields: [componentId], references: [id])
+
+  @@id([orderId, componentId])
+}
+
+model OrderEvent {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type      String
+  fromValue String?
+  toValue   String?
+  note      String   @default("")
+  actor     String   @default("system")
+  createdAt DateTime @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+// ───────────────────────── Customer verification (passwordless) ─────────────────────────
+
+enum VerificationPurpose {
+  HISTORY
+  ORDER
+}
+
+model VerificationCode {
+  id          String              @id @default(uuid())
+  purpose     VerificationPurpose
+  email       String
+  phoneE164   String
+  orderNumber String?
+  isDemo      Boolean             @default(false)
+  codeHash    String
+  attempts    Int                 @default(0)
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  createdAt   DateTime            @default(now())
+
+  @@index([email, phoneE164, createdAt])
+}
+
+model CustomerSession {
+  id         String   @id @default(uuid())
+  tokenHash  String   @unique
+  email      String
+  phoneE164  String
+  isDemo     Boolean  @default(false)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+model RateLimit {
+  key         String   @id
+  count       Int
+  windowStart DateTime
+}
+
+/// Development-only email outbox (written only by the dev email adapter).
+model DevEmail {
+  id        String   @id @default(uuid())
+  to        String
+  subject   String
+  body      String
+  createdAt DateTime @default(now())
+}
