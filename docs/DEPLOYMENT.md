@@ -1,5 +1,7 @@
 # Deployment (Vercel + Neon)
 
+> **Current demo deployment** (authorized by the owner): Neon project `ed-lux-gifts` (aws-us-east-1) + a Vercel project linked to this GitHub repo. The Vercel build (`vercel-build` → `scripts/vercel-build.sh`) runs `prisma migrate deploy`, and with `SEED_DEMO=1` loads the demo data once (the seed skips if products already exist). It runs in **demo mode** (`noindex`, fictional data, email provider inactive so history verification is safely disabled). Remove `SEED_DEMO` after the first deploy.
+
 Nothing here has been run for you: **no infrastructure was provisioned and nothing was deployed.** Do this only with the owner's authorization.
 
 1. **Neon**: create a project (region close to Montréal, e.g. `aws-us-east-1`). Copy the *pooled* connection string → `DATABASE_URL`, the *direct* one → `DIRECT_URL`.
