@@ -10,7 +10,7 @@ One Next.js app, one Postgres database. No traditional customer accounts: custom
 | Email / images | Resend (or the dev adapter) · Cloudinary (or local `public/uploads` in dev) |
 | Deploy | Vercel-compatible (see `docs/DEPLOYMENT.md`) |
 
-> **Status:** the complete application is implemented and runs in **demo mode** with a Christmas-only fictional dataset. Photography is **temporary placeholders** until real/generated images are dropped in (`docs/IMAGE_ASSETS.md`). Nothing has been deployed and no paid service has been provisioned.
+> **Status:** the complete application is implemented and runs in **demo mode** with a Christmas-only fictional dataset. Photography: 37 of 38 generated images are in place; `bases/base-small.jpg` is still a temporary placeholder (see `docs/IMAGE_ASSETS.md`). A demo deployment exists on Vercel (`ed-lux-gifts.vercel.app`, Vercel-login protected) backed by a free Neon project; no other paid service has been provisioned.
 
 ## Quick start (local)
 

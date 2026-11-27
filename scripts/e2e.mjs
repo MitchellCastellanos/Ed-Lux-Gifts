@@ -222,7 +222,7 @@ await step('6. edit a product price and update inventory without a technical for
   await admin.getByRole('link', { name: 'Truffes au chocolat noir' }).first().click(); await admin.waitForURL('**/items/**');
   await admin.locator('#price').fill('16,50'); await shot(admin, 'admin-product-editor'); await admin.getByRole('button', { name: 'Enregistrer' }).click(); await admin.waitForURL('**/catalog/items**');
   await page.goto(`${BASE}/fr/build`, { waitUntil: 'networkidle' }); await page.getByRole('button', { name: /Panier moyen/ }).click(); await page.getByRole('button', { name: 'Continuer' }).click();
-  ok(await page.getByText(/16,50\s\$/).first().isVisible(), 'new price visible in the builder');
+  await page.getByText(/16,50\s\$/).first().waitFor({ timeout: 15000 }); ok(true, 'new price visible in the builder');
   await admin.goto(`${BASE}/admin/catalog/inventory`, { waitUntil: 'networkidle' });
   await admin.getByPlaceholder(/Rechercher un article/).fill('Bougie dorée');
   const row = admin.locator('li', { hasText: 'Bougie dorée' }).first();
