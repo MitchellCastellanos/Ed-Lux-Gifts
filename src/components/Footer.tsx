@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Instagram, Facebook } from 'lucide-react';
+import { Phone, Mail, MapPin, Instagram, Facebook, ShieldCheck } from 'lucide-react';
 import { Logo } from './Logo';
 import { getSettings } from '@/lib/settings';
 import { visibleCollections } from '@/lib/catalog';
@@ -49,7 +49,14 @@ export async function Footer({ locale }: { locale: Locale }) {
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">© {new Date().getFullYear()} {b.name} · {t('footer.rights')}</div>
+      <div className="border-t border-white/10 py-4 text-xs text-white/60">
+        <div className="container-page flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+          <p>© {new Date().getFullYear()} {b.name} · {t('footer.rights')}</p>
+          <Link href="/admin" rel="nofollow" className="inline-flex min-h-[36px] items-center gap-1.5 rounded border border-white/30 px-3.5 text-[13px] font-medium text-white/85 hover:border-gold hover:text-gold-light">
+            <ShieldCheck size={14} aria-hidden /> {t('footer.staff')}
+          </Link>
+        </div>
+      </div>
     </footer>
   );
 }

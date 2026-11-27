@@ -56,4 +56,5 @@ export const storeFr: Record<string, string> = {
   'footer.shop': 'Magasiner', 'footer.help': 'Aide', 'footer.contact': 'Contact', 'footer.privacy': 'Politique de confidentialité', 'footer.terms': 'Conditions générales', 'footer.rights': 'Tous droits réservés.',
   'legal.draft': 'Version préliminaire à faire valider par la propriétaire avant le lancement.',
   'notFound.title': 'Page introuvable', 'notFound.text': 'La page que vous cherchez n’existe pas ou a été déplacée.',
+  'footer.staff': 'Staff',
 };

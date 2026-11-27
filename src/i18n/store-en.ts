@@ -56,4 +56,5 @@ export const storeEn: Record<string, string> = {
   'footer.shop': 'Shop', 'footer.help': 'Help', 'footer.contact': 'Contact', 'footer.privacy': 'Privacy policy', 'footer.terms': 'Terms and conditions', 'footer.rights': 'All rights reserved.',
   'legal.draft': 'Draft to be reviewed by the owner before launch.',
   'notFound.title': 'Page not found', 'notFound.text': 'The page you’re looking for doesn’t exist or has moved.',
+  'footer.staff': 'Staff',
 };
