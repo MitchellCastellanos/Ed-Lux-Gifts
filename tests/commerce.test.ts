@@ -119,9 +119,16 @@ describe('payments & reservation expiry', () => {
     const f = await fixtures();
     await patchSetting('payments', { interacEnabled: false });
     expect(await place({ cart: [readyItem(f.product.id)], paymentMethod: 'INTERAC' })).toMatchObject({ ok: false, error: 'payment' });
-    await patchSetting('payments', { interacEnabled: true, codCash: false });
+    await patchSetting('payments', { interacEnabled: true, codEnabled: false });
     expect(await place({ cart: [readyItem(f.product.id)], paymentMethod: 'COD_CASH' })).toMatchObject({ ok: false, error: 'payment' });
-    expect((await place({ cart: [readyItem(f.product.id)], paymentMethod: 'COD_INTERAC' })).ok).toBe(true);
+    await patchSetting('payments', { codEnabled: true });
+    expect((await place({ cart: [readyItem(f.product.id)], paymentMethod: 'COD_CASH' })).ok).toBe(true);
+  });
+
+  it('payment on delivery is cash only: Interac-at-delivery is rejected server-side', async () => {
+    const f = await fixtures();
+    expect(await place({ cart: [readyItem(f.product.id)], paymentMethod: 'COD_INTERAC' })).toMatchObject({ ok: false, error: 'validation' });
+    expect(await prisma.order.count()).toBe(0);
   });
 
   it('live mode refuses Interac orders until a real (non-fictional) Interac address is configured', async () => {

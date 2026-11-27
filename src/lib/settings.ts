@@ -24,9 +24,7 @@ export const schemas = {
     interacInstructionsFr: z.string().max(600),
     interacInstructionsEn: z.string().max(600),
     interacDeadlineHours: z.number().int().min(1).max(24 * 14),
-    codEnabled: bool,
-    codCash: bool,
-    codInterac: bool,
+    codEnabled: bool, // payment on delivery = cash only
   }),
   schedule: z.object({
     ordersOpen: bool,
@@ -86,8 +84,6 @@ export const defaults: SettingsMap = {
     interacInstructionsEn: 'Send the Interac e-Transfer with the order number in the message. No security question needed.',
     interacDeadlineHours: 48,
     codEnabled: true,
-    codCash: true,
-    codInterac: true,
   },
   schedule: {
     ordersOpen: true,

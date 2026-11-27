@@ -29,7 +29,7 @@ Tax registration; real delivery coverage and rates; per-day capacity; Interac pa
 |---|---|---|
 | Vercel (Pro recommended; Hobby is non-commercial) | hosting, cron | ~US$20/mo |
 | Neon Postgres | database | Free tier is likely enough initially; Launch ≈ US$5–19/mo |
-| Resend | order + verification email | Free tier (3,000/mo, 100/day) likely enough; US$20/mo beyond |
+| Resend | verification codes for "Mes commandes" / order recovery (the platform sends no order-confirmation emails) | Free tier (3,000/mo, 100/day) likely enough; US$20/mo beyond |
 | Cloudinary | image storage/CDN | Free tier likely enough |
 | Domain | | ~C$20/yr |
 | **Total** | | **≈ US$20–40/mo** (≈US$0–5 if hosted on a free tier despite licensing limits) |

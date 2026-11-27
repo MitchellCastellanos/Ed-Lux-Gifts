@@ -288,7 +288,7 @@ export async function saveBusiness(fd: FormData) {
 }
 export async function savePayments(fd: FormData) {
   await requireAdmin();
-  await patchSetting('payments', { interacEnabled: bool(fd, 'interacEnabled'), interacEmail: str(fd, 'interacEmail'), interacInstructionsFr: str(fd, 'interacInstructionsFr'), interacInstructionsEn: str(fd, 'interacInstructionsEn'), interacDeadlineHours: Math.min(336, Math.max(1, int(fd, 'deadline', 48))), codEnabled: bool(fd, 'codEnabled'), codCash: bool(fd, 'codCash'), codInterac: bool(fd, 'codInterac') });
+  await patchSetting('payments', { interacEnabled: bool(fd, 'interacEnabled'), interacEmail: str(fd, 'interacEmail'), interacInstructionsFr: str(fd, 'interacInstructionsFr'), interacInstructionsEn: str(fd, 'interacInstructionsEn'), interacDeadlineHours: Math.min(336, Math.max(1, int(fd, 'deadline', 48))), codEnabled: bool(fd, 'codEnabled') });
   go('/admin/settings/payments');
 }
 export async function saveSchedule(fd: FormData) {

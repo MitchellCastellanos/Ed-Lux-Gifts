@@ -17,7 +17,6 @@ export default async function Comms({ searchParams }: { searchParams: Promise<{ 
       <section className="rounded-lg border border-gold-line bg-white p-5"><h2 className="font-display text-xl font-semibold">{t('a.comms.status')}</h2>
         <ul className="divide-y divide-gold-line/60">
           <Row ok={prov !== 'none'} label={t('a.comms.provider', { p: prov === 'dev' ? t('a.comms.devAdapter') : prov === 'resend' ? 'Resend' : t('a.comms.none') })} help={prov === 'dev' ? t('a.comms.devHelp') : prov === 'none' ? t('a.comms.noneHelp') : undefined} />
-          <Row ok={prov !== 'none'} label={t('a.comms.confirmEmails')} />
           <Row ok={prov !== 'none'} label={t('a.comms.verifyEmails')} help={prov === 'none' ? t('a.comms.verifyOff') : undefined} />
           <Row ok={cloudinaryConfigured()} label={t('a.comms.images')} help={cloudinaryConfigured() ? undefined : t('a.comms.imagesHelp')} />
         </ul></section>

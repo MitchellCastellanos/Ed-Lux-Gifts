@@ -34,11 +34,14 @@ Zones own 3-character postal prefixes (FSA). A prefix belongs to at most one zon
 
 ## Payments
 - **Interac e-Transfer**: order first, then transfer. Confirmation shows amount, Interac email and order number as reference with copy buttons, the deadline, and "payment not verified". The owner marks paid manually; marking paid also confirms the order. Unpaid Interac orders cannot be prepared or delivered.
-- **Payment on delivery**: cash and/or Interac at delivery (each toggleable). The owner records collection with "Livrée et payée".
-- Either method can be disabled; a single remaining method simplifies checkout. In live mode, Interac orders are refused while the Interac address is fictional (`@example.*`).
+- **Payment on delivery**: **cash only** (there is no Interac-at-delivery option; the server rejects it). It can be switched on/off as a whole. The owner records collection with "Livrée et payée". Legacy orders created earlier with the removed `COD_INTERAC` value still display correctly.
+- Either method (Interac, cash on delivery) can be disabled; a single remaining method simplifies checkout. In live mode, Interac orders are refused while the Interac address is fictional (`@example.*`).
 
 ## Order statuses
 Payment: `AWAITING_INTERAC · DUE_ON_DELIVERY · PAID · EXPIRED · REFUNDED`. Fulfillment: `NEW → CONFIRMED → PREPARING → READY → DELIVERED`, or `CANCELLED` from any non-delivered state. Transitions are validated server-side (`allowedActions`) and each is logged in `OrderEvent`. Internal notes are never sent to customers.
 
 ## Demo vs live
 `store.mode = demo | live`. Demo orders/customers carry `isDemo = true`, use `DEMO-` order numbers, and customers are unique per `(phone, isDemo)` so demo and real identities can never collide. Customer history is scoped to the current mode. Going live requires: verified business info, a real Interac address (if enabled), verified zones, confirmed taxes, working email and a completed test email. Cleanup tools remove only untouched demo data; anything the owner edited is converted to a real record (`isDemo = false`) and preserved.
+
+## Emails
+The platform sends **no order-confirmation emails**: the customer sees the confirmation on screen (printable, with the private tracking link). Email is used only for the one-time verification codes (order recovery and "Mes commandes"); the checkout therefore collects the email without describing a confirmation message.

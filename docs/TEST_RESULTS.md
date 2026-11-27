@@ -7,7 +7,7 @@ Everything below was actually executed in the delivery environment (Node 22, Pos
 | `tsc --noEmit` | pass |
 | `next lint` | pass, 0 warnings/errors |
 | `scripts/i18n-check.ts` (every static `t()` key exists in FR and EN; dictionaries identical) | pass |
-| `vitest run` — 5 files, **68 tests** | pass |
+| `vitest run` — 5 files, **69 tests** | pass |
 | `next build` (production) | pass |
 | Production-mode HTTP checks (`next start`, `NODE_ENV=production`): email provider `dev` is inert, history request returns `unavailable`, no code in responses, `robots.txt` disallows all in demo mode, private pages `no-store` + `noindex`, `/admin` redirects, cron without secret = 401 | pass |
 | Browser end-to-end (`scripts/e2e.mjs`, Playwright/Chromium, isolated DB) — **21 checks** | 21/21 pass |

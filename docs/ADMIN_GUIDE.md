@@ -11,7 +11,7 @@ Type their phone number (any format, even just the last digits) in the big searc
 Orders waiting for a transfer show **Marquer comme payée**. Check your bank for the amount with the order number in the message, then click it. This also confirms the order. If the customer paid late and the order shows "Paiement expiré", open it and use **Réactiver (virement tardif)**, then mark it paid (if the items were sold meanwhile you will be told).
 
 ## Prepare and deliver
-Each order has one main button that moves it forward: Confirmer → Commencer la préparation → Prête à livrer → Marquer livrée (for cash/Interac at the door: **Livrée et payée**). Print the **Liste de préparation** (baskets with their contents, ticked boxes) and the **Liste de livraison** (by day and zone, with phone numbers, instructions and amounts to collect). Cancelling asks for confirmation and returns the stock.
+Each order has one main button that moves it forward: Confirmer → Commencer la préparation → Prête à livrer → Marquer livrée (for cash on delivery: **Livrée et payée**). Print the **Liste de préparation** (baskets with their contents, ticked boxes) and the **Liste de livraison** (by day and zone, with phone numbers, instructions and amounts to collect). Cancelling asks for confirmation and returns the stock.
 
 ![Order details](../screenshots/admin-order-details.png)
 

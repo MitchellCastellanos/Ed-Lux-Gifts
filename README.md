@@ -45,7 +45,7 @@ Tests use a separate database: `createdb edlux_test && DATABASE_URL=postgresql:/
 
 ## Test results (what was actually run)
 
-See `docs/TEST_RESULTS.md`. Summary: 68 Vitest tests, 21 browser end-to-end checks, lint, typecheck and a production build all pass; production-mode behaviour was verified with HTTP checks. Known gaps are listed there honestly.
+See `docs/TEST_RESULTS.md`. Summary: 69 Vitest tests, 21 browser end-to-end checks, lint, typecheck and a production build all pass; production-mode behaviour was verified with HTTP checks. Known gaps are listed there honestly.
 
 ## Documentation
 

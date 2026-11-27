@@ -50,17 +50,3 @@ export function codeEmail(locale: 'fr' | 'en', code: string): Mail & { to: '' } 
     : `Your verification code is ${code}. It expires in 10 minutes. If you didn’t request it, ignore this message.`;
   return { to: '', subject, text, html: wrap(fr ? 'Code de vérification' : 'Verification code', `<p style="font-size:28px;letter-spacing:6px;color:#06271E"><b>${code}</b></p><p>${text}</p>`) };
 }
-
-export function orderConfirmationEmail(o: { number: string; locale: 'fr' | 'en'; totalFormatted: string; deliveryDateFormatted: string; trackUrl: string; interac?: { email: string; amount: string } | null; cod: boolean }): Mail & { to: '' } {
-  const fr = o.locale === 'fr';
-  const subject = fr ? `Commande ${o.number} reçue — ED LUX GIFTS` : `Order ${o.number} received — ED LUX GIFTS`;
-  const lines = [
-    fr ? `Merci! Votre commande ${o.number} a bien été reçue.` : `Thank you! Your order ${o.number} was received.`,
-    `${fr ? 'Livraison' : 'Delivery'}: ${o.deliveryDateFormatted}`,
-    `${fr ? 'Total' : 'Total'}: ${o.totalFormatted}`,
-  ];
-  if (o.interac) lines.push(fr ? `Paiement non encore vérifié. Envoyez ${o.interac.amount} par virement Interac à ${o.interac.email} avec ${o.number} dans le message.` : `Payment is not verified yet. Send ${o.interac.amount} by Interac e-Transfer to ${o.interac.email} with ${o.number} in the message.`);
-  if (o.cod) lines.push(fr ? `Le paiement sera perçu à la livraison (${o.totalFormatted}).` : `Payment will be collected on delivery (${o.totalFormatted}).`);
-  lines.push(`${fr ? 'Suivre ma commande' : 'Track my order'}: ${o.trackUrl}`);
-  return { to: '', subject, text: lines.join('\n'), html: wrap(subject, lines.map((l) => `<p>${l}</p>`).join('')) };
-}

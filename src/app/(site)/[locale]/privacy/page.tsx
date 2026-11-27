@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 const COPY = {
   fr: [
     ['Renseignements que nous recueillons', 'Pour traiter votre commande, nous recueillons : votre nom, votre numéro de téléphone, votre courriel, l’adresse de livraison, le nom et le numéro du destinataire (si différent), vos instructions de livraison et le contenu de votre commande. Nous ne recueillons aucun renseignement de carte de paiement : le paiement se fait par virement Interac ou à la livraison.'],
-    ['Pourquoi nous les utilisons', 'Votre numéro de téléphone nous sert à retrouver vos commandes et à vous joindre au besoin. Votre courriel sert à vous envoyer la confirmation de commande et les codes de vérification pour consulter vos commandes. Nous n’envoyons aucune infolettre ni publicité et ne vendons jamais vos renseignements.'],
+    ['Pourquoi nous les utilisons', 'Votre numéro de téléphone nous sert à retrouver vos commandes et à vous joindre au besoin. Votre courriel sert uniquement à vous envoyer les codes de vérification pour consulter vos commandes. Nous n’envoyons aucune infolettre ni publicité et ne vendons jamais vos renseignements.'],
     ['Accès à vos commandes', 'Un numéro de téléphone seul ne donne jamais accès à vos commandes. Pour consulter l’historique, un code à usage unique est envoyé à votre courriel.'],
     ['Fournisseurs de services', 'Hébergement de l’application et de la base de données, envoi de courriels transactionnels et stockage d’images de produits. Ces fournisseurs peuvent traiter des données à l’extérieur du Québec.'],
     ['Témoins et stockage local', 'Nous utilisons le stockage de votre navigateur pour conserver votre panier et votre langue, et un témoin de session temporaire lorsque vous consultez vos commandes. Aucun témoin publicitaire n’est utilisé.'],
@@ -23,7 +23,7 @@ const COPY = {
   ],
   en: [
     ['Information we collect', 'To process your order we collect: your name, phone number, email, delivery address, the recipient’s name and phone (if different), delivery instructions and the contents of your order. We do not collect payment card information: payment is by Interac e-Transfer or on delivery.'],
-    ['Why we use it', 'Your phone number helps us find your orders and contact you if needed. Your email is used to send your order confirmation and the verification codes used to view your orders. We send no newsletters or advertising and never sell your information.'],
+    ['Why we use it', 'Your phone number helps us find your orders and contact you if needed. Your email is used only to send the verification codes used to view your orders. We send no newsletters or advertising and never sell your information.'],
     ['Access to your orders', 'A phone number alone never gives access to your orders. To view your history, a one-time code is sent to your email.'],
     ['Service providers', 'Application and database hosting, transactional email delivery and product image storage. These providers may process data outside Québec.'],
     ['Cookies and local storage', 'We use your browser’s storage to keep your cart and language, and a temporary session cookie when you view your orders. No advertising cookies are used.'],

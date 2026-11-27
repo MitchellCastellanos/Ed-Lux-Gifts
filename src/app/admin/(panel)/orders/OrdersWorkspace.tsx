@@ -125,7 +125,7 @@ export function OrdersWorkspace({ initial }: { initial: WorkspaceData }) {
         <div className="ml-auto flex flex-wrap gap-2">
           <label className="sr-only" htmlFor="fd">{t('a.orders.byDate')}</label><input id="fd" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input !min-h-[36px] !w-auto !py-1 text-sm" />
           <label className="sr-only" htmlFor="fp">{t('a.orders.byPayment')}</label>
-          <select id="fp" value={pay} onChange={(e) => setPay(e.target.value)} className="input !min-h-[36px] !w-auto !py-1 text-sm"><option value="">{t('a.orders.allPayments')}</option><option value="INTERAC">{t('pay.interac')}</option><option value="COD_CASH">{t('pay.codCash')}</option><option value="COD_INTERAC">{t('pay.codInterac')}</option></select>
+          <select id="fp" value={pay} onChange={(e) => setPay(e.target.value)} className="input !min-h-[36px] !w-auto !py-1 text-sm"><option value="">{t('a.orders.allPayments')}</option><option value="INTERAC">{t('pay.interac')}</option><option value="COD_CASH">{t('pay.codCash')}</option></select>
           {(date || pay) && <button className="btn-ghost btn-sm" onClick={() => { setDate(''); setPay(''); }}>{t('a.orders.clear')}</button>}
         </div>
       </div>

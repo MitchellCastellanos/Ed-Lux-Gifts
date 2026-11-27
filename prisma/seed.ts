@@ -146,7 +146,7 @@ async function seedOrders(prodIds: Record<string, string>, base: Record<string, 
   const zone = await prisma.deliveryZone.findFirstOrThrow({ orderBy: { sortOrder: 'asc' } });
   void zone;
   let n = 0;
-  const place = async (o: { phone: string; name: string; email: string; locale?: 'fr' | 'en'; cart: any[]; date: string; pay: 'INTERAC' | 'COD_CASH' | 'COD_INTERAC'; postal: string; city?: string; daysBefore: number; recipient?: string; then?: ('confirm' | 'markPaid' | 'prepare' | 'ready' | 'deliver' | 'deliverPaid' | 'cancel')[] }) => {
+  const place = async (o: { phone: string; name: string; email: string; locale?: 'fr' | 'en'; cart: any[]; date: string; pay: 'INTERAC' | 'COD_CASH'; postal: string; city?: string; daysBefore: number; recipient?: string; then?: ('confirm' | 'markPaid' | 'prepare' | 'ready' | 'deliver' | 'deliverPaid' | 'cancel')[] }) => {
     const [y, m, d] = o.date.split('-').map(Number);
     const created = new Date(Date.UTC(y, m - 1, d, 15) - o.daysBefore * 86400000);
     const r = await createOrder({
@@ -176,7 +176,7 @@ async function seedOrders(prodIds: Record<string, string>, base: Record<string, 
   await place({ phone: '(514) 555-0123', name: 'Marie Tremblay (démo)', email: 'marie.tremblay@example.com', cart: [custom('medium', [['chocolats-assortis', 2], ['cafe-moulu', 1], ['bougie-doree', 1]], ['decor'], 'Joyeuses fêtes, maman!')], date: pastSun1, pay: 'COD_CASH', postal: 'H9S 2B2', daysBefore: 6, recipient: 'Lise Tremblay', then: ['confirm', 'prepare', 'ready', 'deliverPaid'] });
   await place({ phone: '+1 514 555 0123', name: 'Marie Tremblay (démo)', email: 'marie.tremblay@example.com', cart: [ready('reveillon'), ready('petit-cadeau', 2, 'Bonne année!')], date: sat0, pay: 'INTERAC', postal: 'H9H 3C3', city: 'Kirkland', daysBefore: 3 });
   // Shared household number: different name & email -> flagged discrepancy, same operational customer, separate private history
-  await place({ phone: '5145550123', name: 'Luc Gagnon (démo)', email: 'luc.gagnon@example.com', cart: [ready('cafe-the')], date: sun0, pay: 'COD_INTERAC', postal: 'H9W 1A1', city: 'Beaconsfield', daysBefore: 2 });
+  await place({ phone: '5145550123', name: 'Luc Gagnon (démo)', email: 'luc.gagnon@example.com', cart: [ready('cafe-the')], date: sun0, pay: 'COD_CASH', postal: 'H9W 1A1', city: 'Beaconsfield', daysBefore: 2 });
   // Jean-Philippe — active + completed + cancelled
   await place({ phone: '514-555-0142', name: 'Jean-Philippe Roy (démo)', email: 'jp.roy@example.com', cart: [ready('prestige')], date: pastSat1, pay: 'INTERAC', postal: 'H9A 2K2', city: 'Dollard-des-Ormeaux', daysBefore: 7, then: ['markPaid', 'prepare', 'ready', 'deliver'] });
   await place({ phone: '514-555-0142', name: 'Jean-Philippe Roy (démo)', email: 'jp.roy@example.com', cart: [ready('chaleureux'), custom('small', [['truffes-noires', 2], ['biscuits-decores', 1]])], date: sat0, pay: 'INTERAC', postal: 'H9A 2K2', city: 'Dollard-des-Ormeaux', daysBefore: 4, then: ['markPaid', 'prepare'] });

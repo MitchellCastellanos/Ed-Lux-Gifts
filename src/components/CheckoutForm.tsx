@@ -11,7 +11,7 @@ import { OrderLines, Totals } from './CartView';
 import { formatMoney } from '@/lib/money';
 
 export type DateChoice = { date: string; label: string; group: string };
-export type PayChoice = { method: 'INTERAC' | 'COD_CASH' | 'COD_INTERAC'; label: string; help: string };
+export type PayChoice = { method: 'INTERAC' | 'COD_CASH'; label: string; help: string };
 
 type F = Record<string, string>;
 const initial: F = { phone: '', name: '', email: '', address: '', unit: '', city: '', postal: '', recName: '', recPhone: '', date: '', instructions: '' };
@@ -118,7 +118,7 @@ export function CheckoutForm({ dates, pay, closedMessage, demo }: { dates: DateC
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div><label htmlFor="name" className="label">{t('checkout.name')} *</label><input id="name" name="name" autoComplete="name" className="input" value={f.name} onChange={set('name')} {...bad('purchaser.name')} />{err('purchaser.name')}</div>
-            <div><label htmlFor="email" className="label">{t('checkout.email')} *</label><input id="email" name="email" type="email" inputMode="email" autoComplete="email" className="input" value={f.email} onChange={set('email')} {...bad('purchaser.email')} /><p className="hint">{t('checkout.emailHelp')}</p>{err('purchaser.email')}</div>
+            <div><label htmlFor="email" className="label">{t('checkout.email')} *</label><input id="email" name="email" type="email" inputMode="email" autoComplete="email" className="input" value={f.email} onChange={set('email')} {...bad('purchaser.email')} />{err('purchaser.email')}</div>
           </div>
         </fieldset>
 

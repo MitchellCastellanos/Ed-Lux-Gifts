@@ -8,9 +8,6 @@ import { normalizePostalCode, postalPrefix } from './postal';
 import { dateStatus } from './schedule';
 import { computeTaxes, deliveryFee } from './pricing';
 import { resolveCustomer } from './customers';
-import { sendEmail, orderConfirmationEmail } from './email';
-import { formatMoney } from './money';
-import { formatDate } from './schedule';
 import { rateLimit } from './rate-limit';
 import type { FulfillmentStatus, PaymentMethod, Prisma, PaymentStatus } from '@prisma/client';
 
@@ -79,9 +76,7 @@ export async function createOrder(raw: unknown, ctx: { ip?: string; now?: Date; 
     if (!pay.interacEnabled) return { ok: false, error: 'payment' };
     if (!isDemo && isFictionalEmail(pay.interacEmail)) return { ok: false, error: 'not_live' };
   } else {
-    if (!pay.codEnabled) return { ok: false, error: 'payment' };
-    if (input.paymentMethod === 'COD_CASH' && !pay.codCash) return { ok: false, error: 'payment' };
-    if (input.paymentMethod === 'COD_INTERAC' && !pay.codInterac) return { ok: false, error: 'payment' };
+    if (!pay.codEnabled) return { ok: false, error: 'payment' }; // payment on delivery is cash only
   }
 
   const postal = normalizePostalCode(input.delivery.postalCode)!;
@@ -165,8 +160,6 @@ export async function createOrder(raw: unknown, ctx: { ip?: string; now?: Date; 
       },
       { timeout: 20000 },
     );
-    // best-effort email; failure never invalidates the order
-    void sendConfirmation(order.id, ctx.siteUrl).catch(() => {});
     return { ok: true, duplicate: false, order: { id: order.id, number: order.number, publicToken: order.publicToken, totalCents: order.totalCents } };
   } catch (e: any) {
     if (e instanceof OrderError) return { ok: false, error: e.code as any, priced };
@@ -177,21 +170,6 @@ export async function createOrder(raw: unknown, ctx: { ip?: string; now?: Date; 
     }
     throw e;
   }
-}
-
-export async function sendConfirmation(orderId: string, siteUrl?: string) {
-  const o = await prisma.order.findUnique({ where: { id: orderId } });
-  if (!o) return false;
-  const s = await getSettings();
-  const locale = o.locale === 'en' ? 'en' : 'fr';
-  const base = siteUrl ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-  const mail = orderConfirmationEmail({
-    number: o.number, locale, totalFormatted: formatMoney(o.totalCents, locale), deliveryDateFormatted: formatDate(o.deliveryDate, locale),
-    trackUrl: `${base}/${locale}/order/${o.publicToken}`,
-    interac: o.paymentMethod === 'INTERAC' ? { email: s.payments.interacEmail, amount: formatMoney(o.totalCents, locale) } : null,
-    cod: o.paymentMethod !== 'INTERAC',
-  });
-  return sendEmail({ ...mail, to: o.purchaserEmail, replyTo: s.email.replyTo || undefined });
 }
 
 // ───────────────────────── Status workflow ─────────────────────────

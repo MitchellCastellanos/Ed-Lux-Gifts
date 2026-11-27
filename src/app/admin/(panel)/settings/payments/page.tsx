@@ -18,7 +18,7 @@ export default async function PaymentSettings({ searchParams }: { searchParams: 
         <div className="max-w-xs"><label className="label" htmlFor="dl">{t('a.pay.deadline')}</label><input id="dl" name="deadline" type="number" min={1} defaultValue={p.interacDeadlineHours} className="input" /><p className="hint">{t('a.pay.deadlineHelp')}</p></div></section>
       <section className={card}><h2 className="font-display text-xl font-semibold">{t('checkout.payLater')}</h2>
         <Toggle name="codEnabled" label={t('a.pay.enableCod')} defaultChecked={p.codEnabled} />
-        <div className="ml-8 space-y-1"><Toggle name="codCash" label={t('pay.codCash')} defaultChecked={p.codCash} /><Toggle name="codInterac" label={t('pay.codInterac')} defaultChecked={p.codInterac} /></div></section>
+        <p className="ml-8 text-sm text-muted">{t('a.pay.codCashOnly')}</p></section>
       <SubmitButton className="btn-emerald">{t('a.save')}</SubmitButton>
     </form>
   );

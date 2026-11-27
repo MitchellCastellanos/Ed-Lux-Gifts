@@ -28,8 +28,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ local
   const p = s.payments;
   const interacReady = p.interacEnabled && (demo || !isFictionalEmail(p.interacEmail));
   if (interacReady) pay.push({ method: 'INTERAC', label: t('pay.interac'), help: t('pay.interacHelp', { hours: p.interacDeadlineHours }) });
-  if (p.codEnabled && p.codCash) pay.push({ method: 'COD_CASH', label: t('pay.codCash'), help: t('pay.codHelp') });
-  if (p.codEnabled && p.codInterac) pay.push({ method: 'COD_INTERAC', label: t('pay.codInterac'), help: t('pay.codHelp') });
+  if (p.codEnabled) pay.push({ method: 'COD_CASH', label: t('pay.codCash'), help: t('pay.codHelp') });
 
   const closedMessage = paused ? t('checkout.paused') : pay.length === 0 ? t('checkout.notLive') : null;
   return (<><PageHeading title={t('checkout.title')} /><CheckoutForm dates={dates} pay={pay} closedMessage={closedMessage} demo={demo} /></>);

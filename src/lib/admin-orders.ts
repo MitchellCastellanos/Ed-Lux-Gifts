@@ -37,7 +37,7 @@ export async function queryWorkspace(p: { filter: OrderFilter; q?: string; date?
   const base: Prisma.OrderWhereInput = { isDemo };
   const and: Prisma.OrderWhereInput[] = [base, filterWhere(p.filter)];
   if (p.date) and.push({ deliveryDate: p.date });
-  if (p.pay && ['INTERAC', 'COD_CASH', 'COD_INTERAC'].includes(p.pay)) and.push({ paymentMethod: p.pay as any });
+  if (p.pay && ['INTERAC', 'COD_CASH'].includes(p.pay)) and.push({ paymentMethod: p.pay as any });
 
   const q = (p.q ?? '').trim();
   let customers: CustomerHit[] = [];

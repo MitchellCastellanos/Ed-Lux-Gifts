@@ -23,7 +23,7 @@ export const checkoutSchema = z.object({
     deliveryDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'required'),
     instructions: z.string().trim().max(400).optional().default(''),
   }),
-  paymentMethod: z.enum(['INTERAC', 'COD_CASH', 'COD_INTERAC']),
+  paymentMethod: z.enum(['INTERAC', 'COD_CASH']),
   acceptTerms: z.literal(true, { errorMap: () => ({ message: 'terms' }) }),
   idempotencyKey: z.string().min(16).max(80),
 });
